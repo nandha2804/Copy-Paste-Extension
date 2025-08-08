@@ -7,23 +7,65 @@
     
     // More aggressive handling for target site
     if (IS_TARGET_SITE) {
-        // Override key JavaScript functions that might prevent copy/paste
-        Object.defineProperties(window, {
-            onbeforecopy: { value: null, writable: false },
-            onbeforecut: { value: null, writable: false },
-            onbeforepaste: { value: null, writable: false },
-            oncopy: { value: null, writable: false },
-            oncut: { value: null, writable: false },
-            onpaste: { value: null, writable: false },
-            oncontextmenu: { value: null, writable: false }
-        });
-        
-        // Disable common protection techniques
-        window.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V')) {
-                e.stopImmediatePropagation();
-            }
-        }, true);
+        // Force disable all protections immediately
+        try {
+            // Override security functions
+            Object.defineProperties(window, {
+                onbeforecopy: { value: null, writable: false },
+                onbeforecut: { value: null, writable: false },
+                onbeforepaste: { value: null, writable: false },
+                oncopy: { value: null, writable: false },
+                oncut: { value: null, writable: false },
+                onpaste: { value: null, writable: false },
+                oncontextmenu: { value: null, writable: false },
+                onselectstart: { value: null, writable: false },
+                ondragstart: { value: null, writable: false }
+            });
+
+            // Override core prototypes
+            ['copy', 'paste', 'cut', 'contextmenu', 'selectstart', 'dragstart'].forEach(event => {
+                document.addEventListener(event, e => {
+                    e.stopImmediatePropagation();
+                    return true;
+                }, { capture: true, passive: false });
+
+                // Remove any existing listeners
+                const existingListeners = getEventListeners(document)[event];
+                if (existingListeners) {
+                    existingListeners.forEach(listener => {
+                        document.removeEventListener(event, listener.listener, listener.useCapture);
+                    });
+                }
+            });
+
+            // Disable keyboard protection
+            window.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' || e.key === 'x' || e.key === 'X')) {
+                    e.stopImmediatePropagation();
+                    return true;
+                }
+            }, { capture: true, passive: false });
+
+            // Force enable copy/paste at document level
+            document.designMode = 'on';
+            document.execCommand("enableObjectResizing", false, true);
+            document.execCommand("enableInlineTableEditing", false, true);
+            
+            // Add mandatory styles
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    -webkit-user-select: text !important;
+                    -moz-user-select: text !important;
+                    -ms-user-select: text !important;
+                    user-select: text !important;
+                    -webkit-touch-callout: text !important;
+                }
+            `;
+            document.head.appendChild(style);
+        } catch (err) {
+            console.warn('Initial protection override failed:', err);
+        }
     }
     
     // Add minimal style just for text selection
