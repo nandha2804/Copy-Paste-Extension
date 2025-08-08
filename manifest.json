@@ -5,27 +5,27 @@
   "description": "Enable copy and paste on websites that block it",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "clipboardRead",
+    "clipboardWrite"
   ],
   "host_permissions": [
-    "<all_urls>",
-    "*://*.booktypingtechnology.in/*"
+    "<all_urls>"
   ],
   "action": {
     "default_icon": "icon.png"
   },
-  "background": {
-    "service_worker": "background.js"
+  "icons": {
+    "48": "icon.png"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "run_at": "document_start",
-      "all_frames": true
+      "all_frames": true,
+      "match_about_blank": true,
+      "world": "MAIN"
     }
-  ],
-  "icons": {
-    "48": "icon.png"
-  }
+  ]
 }
