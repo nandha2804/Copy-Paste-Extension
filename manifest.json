@@ -5,10 +5,11 @@
   "description": "Enable copy and paste on websites that block it",
   "permissions": [
     "activeTab",
-    "debugger"
+    "scripting"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "*://*.booktypingtechnology.in/*"
   ],
   "action": {
     "default_icon": "icon.png"
