@@ -1,34 +1,44 @@
-# Copy Paste Enabler Extension
+# Enable Copy Paste Extension
 
-This Chrome extension enables copy and paste functionality on typing practice websites.
+A Chrome extension that enables copy and paste functionality on websites that try to prevent it. This extension removes copy/paste restrictions and text selection blocking from any webpage.
 
-## Installation Instructions:
+## Features
 
-1. Download this folder
+- Enables text selection on any website
+- Allows copying and pasting of text
+- Works with right-click context menu
+- Supports iframes content
+- Handles dynamically loaded content
+- Works across all websites
+- Maintains selection highlighting
 
-2. Open Chrome and go to Extensions:
-   - Click the menu icon (three dots) in the top right
-   - Go to More Tools > Extensions
-   - Or type `chrome://extensions/` in the address bar
+## Installation
 
-3. Enable Developer Mode:
-   - Toggle the "Developer mode" switch in the top right corner
+1. Clone this repository or download the files
+2. Open Chrome and go to `chrome://extensions/`
+3. Enable "Developer mode" in the top right corner
+4. Click "Load unpacked" and select the extension directory
 
-4. Load the Extension:
-   - Click "Load unpacked"
-   - Navigate to and select the CopyPasteEnabler folder
-   - Click "Select Folder"
+## How it Works
 
-5. The extension should now appear in your extensions list
+The extension:
+- Removes copy/paste blocking event listeners
+- Enables text selection through CSS
+- Overrides restrictive JavaScript protections
+- Monitors for dynamic content changes
+- Handles iframe content when possible
+- Preserves native copy/paste functionality
 
-6. Visit the typing practice website and the copy/paste functionality should be enabled automatically
+## Technical Details
 
-## Features:
-- Enables text selection
-- Enables copy/paste functionality
-- Enables right-click context menu
-- Works with keyboard shortcuts (Ctrl+C, Ctrl+V)
-- Automatically runs on typing practice websites
+The extension uses various techniques to ensure copy/paste functionality:
+- CSS overrides for user-select properties
+- Event listener removal and blocking
+- Attribute cleanup
+- MutationObserver for dynamic content
+- Iframe content handling
+- ClipboardEvent overrides when needed
 
-## Note:
-This extension only activates on typing practice websites to ensure it doesn't interfere with other websites' functionality.
+## License
+
+MIT License - Feel free to use and modify as needed.
