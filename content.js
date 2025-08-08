@@ -3,6 +3,28 @@
     // Constants
     const REFRESH_INTERVAL = 1000;
     const PROTECTED_EVENTS = ['copy', 'paste', 'cut', 'contextmenu', 'selectstart'];
+    const IS_TARGET_SITE = window.location.href.includes('booktypingtechnology.in/page-typing');
+    
+    // More aggressive handling for target site
+    if (IS_TARGET_SITE) {
+        // Override key JavaScript functions that might prevent copy/paste
+        Object.defineProperties(window, {
+            onbeforecopy: { value: null, writable: false },
+            onbeforecut: { value: null, writable: false },
+            onbeforepaste: { value: null, writable: false },
+            oncopy: { value: null, writable: false },
+            oncut: { value: null, writable: false },
+            onpaste: { value: null, writable: false },
+            oncontextmenu: { value: null, writable: false }
+        });
+        
+        // Disable common protection techniques
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V')) {
+                e.stopImmediatePropagation();
+            }
+        }, true);
+    }
     
     // Add minimal style just for text selection
     const style = document.createElement('style');
@@ -20,6 +42,29 @@
         console.warn('Copy-Paste Extension:', error);
     }
 
+    // Function to force enable selection
+    function forceEnableSelection(element) {
+        if (IS_TARGET_SITE) {
+            const originalDisplay = element.style.display;
+            const originalVisibility = element.style.visibility;
+            
+            // Temporarily make element visible to modify it
+            element.style.visibility = 'visible';
+            element.style.display = 'block';
+            
+            // Force enable selection
+            element.contentEditable = 'true';
+            element.style.userSelect = 'text';
+            element.style.webkitUserSelect = 'text';
+            element.style.MozUserSelect = 'text';
+            element.style.msUserSelect = 'text';
+            
+            // Restore original visibility
+            element.style.display = originalDisplay;
+            element.style.visibility = originalVisibility;
+        }
+    }
+
     // Function to enable copy/paste for a specific document
     function enableCopyPaste(doc) {
         try {
@@ -30,6 +75,13 @@
                 head.appendChild(style.cloneNode(true));
             }
 
+            if (IS_TARGET_SITE) {
+                // Override document methods
+                doc.designMode = 'on';
+                doc.execCommand('enableObjectResizing', false, true);
+                doc.execCommand('enableInlineTableEditing', false, true);
+            }
+
             // Remove copy/paste blocking
             PROTECTED_EVENTS.forEach(event => {
                 doc.addEventListener(event, (e) => {
@@ -38,8 +90,11 @@
                 }, { capture: true, passive: false });
             });
 
-            // Find text elements that should be copyable
-            const elements = doc.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6, article, section, pre, code');
+            // Find elements based on site
+            const selector = IS_TARGET_SITE 
+                ? '*' // Select all elements on target site
+                : 'p, span, div, h1, h2, h3, h4, h5, h6, article, section, pre, code';
+            const elements = doc.querySelectorAll(selector);
             elements.forEach(el => {
                 try {
                     // Only process text-containing elements
@@ -57,8 +112,12 @@
                             }
                         });
                         
-                        // Mark as copyable without modifying other styles
-                        el.setAttribute('data-copyable', 'true');
+                        // Apply appropriate modifications
+                        if (IS_TARGET_SITE) {
+                            forceEnableSelection(el);
+                        } else {
+                            el.setAttribute('data-copyable', 'true');
+                        }
                     }
                 } catch (err) {
                     handleError(err);

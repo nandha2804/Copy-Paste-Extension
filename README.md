@@ -1,16 +1,14 @@
 # Enable Copy Paste Extension
 
-A Chrome extension that enables copy and paste functionality on websites that try to prevent it. This extension removes copy/paste restrictions and text selection blocking from any webpage.
+A Chrome extension that enables copy and paste functionality on websites that try to prevent it. This extension carefully removes copy/paste restrictions without affecting the website's layout or functionality.
 
 ## Features
 
-- Enables text selection on any website
-- Allows copying and pasting of text
-- Works with right-click context menu
-- Supports iframes content
+- Enables text selection and copy/paste on protected websites
+- Works with right-click context menu for copy/paste
+- Non-intrusive: doesn't modify website appearance
+- Supports text inside iframes when possible
 - Handles dynamically loaded content
-- Works across all websites
-- Maintains selection highlighting
 
 ## Installation
 
@@ -22,22 +20,20 @@ A Chrome extension that enables copy and paste functionality on websites that tr
 ## How it Works
 
 The extension:
-- Removes copy/paste blocking event listeners
-- Enables text selection through CSS
-- Overrides restrictive JavaScript protections
-- Monitors for dynamic content changes
-- Handles iframe content when possible
-- Preserves native copy/paste functionality
+- Enables copy/paste by removing restrictions on text elements
+- Preserves website layout and functionality
+- Only modifies copy/paste related behaviors
+- Carefully handles dynamic content updates
+- Works with iframe content when possible
 
 ## Technical Details
 
-The extension uses various techniques to ensure copy/paste functionality:
-- CSS overrides for user-select properties
-- Event listener removal and blocking
-- Attribute cleanup
-- MutationObserver for dynamic content
-- Iframe content handling
-- ClipboardEvent overrides when needed
+The extension uses targeted techniques to enable copy/paste:
+- Selective text element enhancement
+- Copy/paste event handler management
+- Focused attribute handling
+- Smart dynamic content detection
+- Non-intrusive CSS modifications
 
 ## License
 

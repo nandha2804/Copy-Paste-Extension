@@ -4,13 +4,17 @@
   "version": "1.0",
   "description": "Enable copy and paste on websites that block it",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "debugger"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
   "action": {
     "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
