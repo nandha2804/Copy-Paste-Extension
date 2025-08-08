@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Content-Security-Policy",
+          "operation": "set",
+          "value": "script-src 'none'"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||booktypingtechnology.in/page-typing",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  }
+]
